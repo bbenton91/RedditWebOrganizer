@@ -1,0 +1,19 @@
+
+#innerListings{
+    color: orangered;
+}
+
+.rotating {
+    /* animation: rotation 2s infinite linear; */
+    transform: rotate(25deg);
+    background-color: pink;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
