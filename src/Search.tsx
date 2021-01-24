@@ -1,13 +1,14 @@
 import React, { SyntheticEvent } from 'react';
 import {ListingData} from './Listings'
 
-export function Search() {
+export type SearchProps = {
+  originalData: Array<ListingData>
+  setFilteredDataCallback: (data: Array<ListingData>) => void
+}
+
+export function Search(props: SearchProps) {
 
   var delayedFilter: NodeJS.Timeout;
-  
-
-  const [data, setData] = React.useState(new Array<ListingData>());
-  const [filteredData, setFilteredData] = React.useState(new Array<ListingData>());
 
   const filter = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -15,13 +16,13 @@ export function Search() {
     const text = e.currentTarget.value;
 
     if (text === "") {
-      setFilteredData(data);
+      props.setFilteredDataCallback(props.originalData);
       return;
     }
 
     clearTimeout(delayedFilter); // Clear the last timeout (if any)
     delayedFilter = setTimeout(() => { // Then search on a delay
-      setFilteredData(data.filter(item => item.title.includes(text)));
+      props.setFilteredDataCallback(props.originalData.filter(item => item.title.includes(text)));
       console.log("filtered")
     }, 1000)
 

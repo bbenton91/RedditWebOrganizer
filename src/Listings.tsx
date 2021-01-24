@@ -13,30 +13,26 @@ export type ListingData = {
   is_self: boolean
 }
 
-export function Listings() {
+export type ListProps = {
+  filteredData: Array<ListingData>
+  setDataCallback: (data: Array<ListingData>) => void
+  url: string
+}
 
-  const appId = "C6iDiQaoPTwgVw"
-  const redirect = "http://localhost:3000"
-  const scope = "identity,save,history"
-
-  const url = `https://www.reddit.com/api/v1/authorize?client_id=${appId}&response_type=code&
-state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
-
+export function Listings(props: ListProps) {
+  
   type ResponseData = {
     data: Array<ListingData>,
     sessionId:string
   }
 
-  const [data, setData] = React.useState<Array<ListingData>>([]);
-  const [filteredData, setFilteredData] = React.useState<Array<ListingData>>([]);
-
   const [loadingData, setLoadingData] = React.useState<boolean>(false);
 
-  const hasData = data.length > 0;
+  const hasData = props.filteredData.length > 0;
   const loggedIn = () => Cookies.getCookie("token") !== "";
 
   const authorize = () => {
-    var newUrl: string = url.replace("#rs", "something")
+    var newUrl: string = props.url.replace("#rs", "something")
     window.location.href = newUrl;
   }
 
@@ -50,10 +46,8 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
       body: JSON.stringify({"token": Cookies.getCookie("token"), "sessionId": Cookies.getCookie("sessionId")})
     }).then(response => response.text())
       .then(data => {
-        // console.log(data)
         var obj:ResponseData = JSON.parse(data); // Parse the json
-        setData(obj.data); // Set our state data
-        setFilteredData(obj.data);
+        props.setDataCallback(obj.data); // Set our state data
         console.log(obj)
         Cookies.addCookie("sessionId", obj.sessionId ?? "") // Add the auth cookie //TODO Need to set time expiration
         if (obj.sessionId === "")
@@ -70,8 +64,8 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
   }
 
   const removeListing: (id:string) => void = (id) => {
-    var newData = data.filter(listing => listing.id !== id)
-    setData(newData);
+    var newData = props.filteredData.filter(listing => listing.id !== id)
+    props.setDataCallback(newData);
   }
 
   // Generates the buttons for Login/fetch
@@ -87,10 +81,10 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
 
   // Generates the listings
   const listings = () => {
-    if (filteredData.length > 0) {
+    if (props.filteredData.length > 0) {
       return <ul className="m-2 w-full">
       {
-        filteredData.map(value =>
+        props.filteredData.map(value =>
           <li>< Listing removeSelf={removeListing} data={value} /></li>
         )
       }
