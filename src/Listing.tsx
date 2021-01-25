@@ -1,15 +1,16 @@
 import React from 'react';
 import { Cookies } from './Cookies';
-import { ListingData } from './Listings';
+import { ListingData } from './App';
 import loadingSpinner from './images/spinner-of-dots.png';
 
 
 type BodyProps = {
   removeSelf:(id:string) => void
-  data:ListingData
+  data: ListingData,
+  authorizeCallback: () => void
 }
 
-export function Listing({removeSelf, data}:BodyProps) {
+export function Listing({removeSelf, data, authorizeCallback}:BodyProps) {
 
   type ResponseData = {
     success: boolean,
@@ -35,10 +36,15 @@ export function Listing({removeSelf, data}:BodyProps) {
     }).then(response => response.text())
       .then(responseData => {
         var obj: ResponseData = JSON.parse(responseData); // Parse the json
-        if(obj.success)
+        if(obj.success) // If success, remove our listing by calling the passed in callback
           removeSelf(data.id);
+        
         setUnsaving(false)
+
+        // Add our cookie. If the sessionId is empty, we need to reauthenticate
         Cookies.addCookie("sessionId", obj.sessionId);
+        if (obj.sessionId === "")
+        authorizeCallback();
     })
   }
 
@@ -49,6 +55,8 @@ export function Listing({removeSelf, data}:BodyProps) {
   
   return <div className="listing w-full bg-gray-400 mb-2 h-14 flex">
     <div className="flex-grow flex-1 text-lg pl-1 pr-1">{title(data.title)}</div>
+    <div className="w-1/12 bg-gray-600 mr-2 flex justify-center place-items-center">{data.author}</div>
+    <div className="w-1/12 bg-gray-600 mr-2 flex justify-center place-items-center">{data.subreddit}</div>
     <div className="w-1/12 bg-gray-600 mr-2"><a href={data.url}><button className="h-full w-full block rounded">To Link</button></a></div>
     <div className="w-1/12 bg-gray-600 mr-2"><a href={redditBaseUrl+data.permalink}><button className="h-full w-full block rounded">To Permalink</button></a></div>
     <div className="w-1/12 bg-gray-600"><a onClick={unsavePost}>{ unsaveButton }</a></div>

@@ -1,22 +1,16 @@
 import React from 'react';
 import { Cookies } from './Cookies';
 import { Listing } from './Listing';
+import { ListingData } from './App';
 import loadingSpinner from './images/spinner-of-dots.png';
 import './styles/Listings.css'
 
 
-export type ListingData = {
-  title: string,
-  url: string,
-  permalink: string,
-  id: string,
-  is_self: boolean
-}
-
 export type ListProps = {
   filteredData: Array<ListingData>
   setDataCallback: (data: Array<ListingData>) => void
-  url: string
+  url: string,
+  authorizeCallback: () => void
 }
 
 export function Listings(props: ListProps) {
@@ -30,11 +24,6 @@ export function Listings(props: ListProps) {
 
   const hasData = props.filteredData.length > 0;
   const loggedIn = () => Cookies.getCookie("token") !== "";
-
-  const authorize = () => {
-    var newUrl: string = props.url.replace("#rs", "something")
-    window.location.href = newUrl;
-  }
 
   const params = new URLSearchParams(window.location.search)
 
@@ -51,7 +40,7 @@ export function Listings(props: ListProps) {
         console.log(obj)
         Cookies.addCookie("sessionId", obj.sessionId ?? "") // Add the auth cookie //TODO Need to set time expiration
         if (obj.sessionId === "")
-          authorize();
+          props.authorizeCallback();
         
         // setLoadingData(false)
     })
@@ -71,7 +60,7 @@ export function Listings(props: ListProps) {
   // Generates the buttons for Login/fetch
   const button:()=>JSX.Element|string = () => {
     if (!loggedIn())
-      return <button onClick={authorize} className="ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-20 h-14">Log In</button>
+      return <button onClick={props.authorizeCallback} className="ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-20 h-14">Log In</button>
     else if (!hasData && !loadingData)
       return <button onClick={fetchData} className="rotate ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-20 h-14">Fetch Data</button>
     else if (!hasData && loadingData)
@@ -85,7 +74,7 @@ export function Listings(props: ListProps) {
       return <ul className="m-2 w-full">
       {
         props.filteredData.map(value =>
-          <li>< Listing removeSelf={removeListing} data={value} /></li>
+          <li>< Listing removeSelf={removeListing} data={value} authorizeCallback={props.authorizeCallback} /></li>
         )
       }
       </ul>

@@ -1,5 +1,5 @@
 import React, { SyntheticEvent } from 'react';
-import {ListingData} from './Listings'
+import {ListingData} from './App'
 
 export type SearchProps = {
   originalData: Array<ListingData>

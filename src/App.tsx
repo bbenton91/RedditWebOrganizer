@@ -9,7 +9,9 @@ export type ListingData = {
   url: string,
   permalink: string,
   id: string,
-  is_self: boolean
+  is_self: boolean,
+  author: string,
+  subreddit: string
 }
 
 export function App() {
@@ -34,6 +36,12 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
     setFilteredData(newData);
   }
 
+  const authorize = () => {
+    // Replace our state code. This should be uniquee every request and checked when we return
+    var newUrl: string = url.replace("#rs", "something")
+    window.location.href = newUrl;
+  }
+
   const params = new URLSearchParams(window.location.search)
 
   
@@ -43,7 +51,7 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
     window.history.replaceState(null, "React App", "/")
   }
 
-  const listingProps:ListProps = {url:"", filteredData: filteredData, setDataCallback: setAllData}
+  const listingProps:ListProps = {url:"", filteredData: filteredData, setDataCallback: setAllData, authorizeCallback: authorize}
   const searchProps: SearchProps = {originalData: data, setFilteredDataCallback: setFilteredData}
 
   return <div className="flex flex-col h-full items-center justify-center text-white bg-gradient-to-br from-gray-600 via-teal-700 to-gray-800">
