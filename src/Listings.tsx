@@ -2,7 +2,7 @@ import React from 'react';
 import { Cookies } from './Cookies';
 import { Listing } from './Listing';
 import { ListingData } from './App';
-import loadingSpinner from './images/spinner-of-dots.png';
+import { LoadingButton } from './LoadingButton';
 import './styles/Listings.css'
 
 
@@ -42,7 +42,7 @@ export function Listings(props: ListProps) {
         if (obj.sessionId === "")
           props.authorizeCallback();
         
-        // setLoadingData(false)
+        setLoadingData(false)
     })
   }
 
@@ -58,13 +58,21 @@ export function Listings(props: ListProps) {
   }
 
   // Generates the buttons for Login/fetch
-  const button:()=>JSX.Element|string = () => {
+  const button: () => JSX.Element | string = () => {
+    const className = "ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-60 h-20"
+
+    var button:JSX.Element|string
     if (!loggedIn())
-      return <button onClick={props.authorizeCallback} className="ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-20 h-14">Log In</button>
+      button = <LoadingButton callback={fetchData} text="Login" loading={false} className={className}/>
     else if (!hasData && !loadingData)
-      return <button onClick={fetchData} className="rotate ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-20 h-14">Fetch Data</button>
+      button = <LoadingButton callback={fetchData} text="Fetch Data" loading={false} className={className}/>
     else if (!hasData && loadingData)
-      return <button onClick={fetchData} className="rotate ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-20 h-14"><img className="rotating" src={loadingSpinner} alt="loading spinner"></img>Fetching Data</button>
+      button = <LoadingButton callback={fetchData} text="Fetching Data" loading={true} className={className} />
+    else
+      button = "";
+    
+    if (button !== "")
+      return <div className="flex w-full h-full justify-center place-items-center">{button}</div>
     return "";
   }
 
@@ -82,7 +90,7 @@ export function Listings(props: ListProps) {
   }
   
   // The final render
-  return <div id="innerListings" className="w-5/6 min-h-1/4 bg-white flex">
+  return <div id="innerListings" className="w-5/6 h-5/6 bg-white flex overflow-y-auto">
     {button()}
     {listings()}
   </div>

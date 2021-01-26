@@ -41,9 +41,13 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
     var newUrl: string = url.replace("#rs", "something")
     window.location.href = newUrl;
   }
+  
+  const clearAuthorize = () => {
+    Cookies.clearCookie("sessionId");
+    setAllData([]);
+  }
 
   const params = new URLSearchParams(window.location.search)
-
   
   if (params.get("code") != null) {
     Cookies.addCookie("token", params.get("code")!);
@@ -51,11 +55,13 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
     window.history.replaceState(null, "React App", "/")
   }
 
+
   const listingProps:ListProps = {url:"", filteredData: filteredData, setDataCallback: setAllData, authorizeCallback: authorize}
   const searchProps: SearchProps = {originalData: data, setFilteredDataCallback: setFilteredData}
 
   return <div className="flex flex-col h-full items-center justify-center text-white bg-gradient-to-br from-gray-600 via-teal-700 to-gray-800">
-    Here is the Latest React version: <strong>{React.version}</strong>
+    <h1 className="text-5xl mb-5">Reddit Organizer</h1>
+    <button onClick={clearAuthorize}>Logout</button>
     <Search  {...searchProps}/>
     <Listings {...listingProps} />
     </div>

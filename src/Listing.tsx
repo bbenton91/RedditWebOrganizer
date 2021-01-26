@@ -2,6 +2,7 @@ import React from 'react';
 import { Cookies } from './Cookies';
 import { ListingData } from './App';
 import loadingSpinner from './images/spinner-of-dots.png';
+import { LoadingButton } from './LoadingButton';
 
 
 type BodyProps = {
@@ -22,8 +23,8 @@ export function Listing({removeSelf, data, authorizeCallback}:BodyProps) {
   const redditBaseUrl = "https://reddit.com/"
 
   const unsaveButton = !unsaving ?
-    <button className="h-full w-full block rounded">Unsave</button>
-    : <button className="h-full w-full rounded flex justify-center items-center"> <img className="rotating w-6 h-6 flex-shrink mr-3" src={loadingSpinner} alt="loading spinner"></img> <span className="">Unsaving</span></button>
+    <LoadingButton callback={() => { }} text="Unsave" loading={false} className="h-full w-full block rounded"/>
+    : <LoadingButton callback={() => { }} text="Unsaving" loading={true} className="h-full w-full block rounded"/>
 
   const unsavePost = () => {
     setUnsaving(true);
@@ -44,7 +45,8 @@ export function Listing({removeSelf, data, authorizeCallback}:BodyProps) {
         // Add our cookie. If the sessionId is empty, we need to reauthenticate
         Cookies.addCookie("sessionId", obj.sessionId);
         if (obj.sessionId === "")
-        authorizeCallback();
+          authorizeCallback();
+        console.log(obj.sessionId);
     })
   }
 
@@ -53,12 +55,14 @@ export function Listing({removeSelf, data, authorizeCallback}:BodyProps) {
     return title.length > length ? title.substr(0, length-3) + "..." : title
   }
   
-  return <div className="listing w-full bg-gray-400 mb-2 h-14 flex">
-    <div className="flex-grow flex-1 text-lg pl-1 pr-1">{title(data.title)}</div>
-    <div className="w-1/12 bg-gray-600 mr-2 flex justify-center place-items-center">{data.author}</div>
-    <div className="w-1/12 bg-gray-600 mr-2 flex justify-center place-items-center">{data.subreddit}</div>
-    <div className="w-1/12 bg-gray-600 mr-2"><a href={data.url}><button className="h-full w-full block rounded">To Link</button></a></div>
-    <div className="w-1/12 bg-gray-600 mr-2"><a href={redditBaseUrl+data.permalink}><button className="h-full w-full block rounded">To Permalink</button></a></div>
-    <div className="w-1/12 bg-gray-600"><a onClick={unsavePost}>{ unsaveButton }</a></div>
+  return <div className="listing w-full bg-gray-400 mb-2 h-14 flex text-black">
+    <div className="flex-grow flex-1 text-lg pl-1 pr-1 font-medium">{title(data.title)}</div>
+    <div className="w-1/6 mr-2 flex justify-center place-items-center flex-col border-l-2 border-r-2">
+      <span>{"r/"+data.subreddit}</span>
+      <span>{"u/"+data.author}</span>
+    </div>
+    <div className="w-20 mr-1 rounded border-r-2"><a className="" href={data.url}><button className="h-full w-full block rounded">Link</button></a></div>
+    <div className="w-20 mr-1 rounded border-r-2"><a href={redditBaseUrl+data.permalink}><button className="h-full w-full block rounded">Permalink</button></a></div>
+    <div className="w-20 rounded"><a onClick={unsavePost}>{ unsaveButton }</a></div>
   </div>
 }
