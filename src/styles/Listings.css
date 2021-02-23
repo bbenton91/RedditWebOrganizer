@@ -1,9 +1,5 @@
 #innerListings{
-}
-
-.listing{
-    overflow: hidden;
-    text-overflow: ellipsis;
+    background-color: #0f0f0f;
 }
 
 .rotating {

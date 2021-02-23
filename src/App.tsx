@@ -2,7 +2,10 @@ import React from 'react';
 import { Cookies } from './Cookies';
 import { Listings, ListingType, ListProps } from './Listings';
 import { ListingTypeChooser } from './ListingTypeChooser';
-import {Search, SearchProps} from './Search'
+import { Search, SearchProps } from './Search'
+
+import "./styles/App.css";
+
 
 /** 
  * The type for our individual listings 
@@ -88,12 +91,12 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
   // Props to send to the search component
   const searchProps: SearchProps = {originalData: currListingType === ListingType.Link ? data.links : data.comments, setFilteredDataCallback: setFilteredData}
 
-  return <div className="flex flex-col h-full items-center justify-center text-white bg-gradient-to-br from-gray-600 via-teal-700 to-gray-800">
-    <h1 className="text-5xl mb-5">Reddit Organizer</h1>
-    <button onClick={clearAuthorize}>Logout</button>
+  return <div id="main" className="flex flex-col h-full items-center justify-center text-white">
+      <h1 className="text-5xl mb-5 mt-2 title">Reddit Organizer</h1>
+      <button className="text-color" onClick={clearAuthorize}>Logout</button>
     <Search  {...searchProps} />
-    <ListingTypeChooser setListingType={setNewCurrListingType}/>
-    <Listings {...listingProps} />
+      <ListingTypeChooser setListingType={setNewCurrListingType}/>
+      <Listings {...listingProps} />
     </div>
 }
 

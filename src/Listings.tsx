@@ -4,6 +4,7 @@ import { Listing } from "./Listing";
 import { SavedData, ListingData } from "./App";
 import { LoadingButton } from "./LoadingButton";
 import "./styles/Listings.css";
+import ClipLoader from "react-spinners/ClipLoader"
 
 export enum ListingType{Link, Comment}
 
@@ -23,6 +24,7 @@ export function Listings(props: ListProps) {
   };
 
   const [loadingData, setLoadingData] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
 
   const hasData = props.filteredData.length > 0;
   const loggedIn = () => Cookies.getCookie("token") !== "";
@@ -51,12 +53,11 @@ export function Listings(props: ListProps) {
         if (obj.sessionId === "") props.authorizeCallback();
 
         setLoadingData(false);
-      });
+      }).catch(reason => { setLoadingData(false); setError("Something went wrong. Please try again later")});
   };
 
   if (params.get("code") != null) {
     Cookies.addCookie("token", params.get("code")!);
-    // window.location.replace("http://localhost:3000")
     window.history.replaceState(null, "React App", "/");
   }
 
@@ -77,6 +78,8 @@ export function Listings(props: ListProps) {
       "ml-4 bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded w-60 h-20";
 
     var button: JSX.Element | string;
+    var status = error !== "" ? "Something went wrong. Please try again later" : "";
+
     if (!loggedIn())
       button = (
         <LoadingButton
@@ -84,32 +87,38 @@ export function Listings(props: ListProps) {
           text="Login"
           loading={false}
           className={className}
+          iconPath=""
         />
       );
     else if (!hasData && !loadingData)
       button = (
-        <LoadingButton
-          callback={fetchData}
-          text="Fetch Data"
-          loading={false}
-          className={className}
-        />
+          <LoadingButton
+            callback={fetchData}
+            text="Fetch Data"
+            loading={false}
+            className={className}
+            iconPath=""
+          
+          />
       );
-    else if (!hasData && loadingData)
-      button = (
+    else if (!hasData && loadingData) {
+      status = "Please be patient. This could take up to a minute to retrieve all saved posts."
+      button = button = (
         <LoadingButton
           callback={fetchData}
           text="Fetching Data"
           loading={true}
           className={className}
+          iconPath=""
         />
       );
-    else button = "";
+    }else button = "";
 
     if (button !== "")
       return (
-        <div className="flex w-full h-full justify-center place-items-center">
+        <div className="flex flex-col h-full items-center justify-center">
           {button}
+          <span id="statusText" className="text-yellow-700 hidden">{status}</span>
         </div>
       );
     return "";
@@ -134,11 +143,15 @@ export function Listings(props: ListProps) {
     }
   };
 
+  setTimeout(() => {
+    document.querySelector("#statusText")?.classList.remove("hidden");
+  }, 3000);
+
   // The final render
   return (
     <div
       id="innerListings"
-      className="w-5/6 h-5/6 bg-white flex overflow-y-auto"
+      className="w-full lg:w-4/6 h-5/6 bg-white overflow-y-auto"
     >
       {button()}
       {listings()}

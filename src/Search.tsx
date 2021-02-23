@@ -45,43 +45,7 @@ export function Search(props: SearchProps) {
         id=""
       />
 
-      <div className="flex space-x-10">
-        <div className="flex flex-col items-center">
-          <label htmlFor="searchTitle">Search Title</label>
-          <input
-            className="w-4 h-4"
-            type="checkbox"
-            id="searchTitle"
-            name="searchTitle"
-            value="Title"
-            defaultChecked={true}
-          ></input>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <label htmlFor="searchTitle">Search Subreddit</label>
-          <input
-            className="w-4 h-4"
-            type="checkbox"
-            id="searchSubreddit"
-            name="searchSubreddit"
-            value="Subreddit"
-            defaultChecked={true}
-          ></input>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <label htmlFor="searchTitle">Search Author</label>
-          <input
-            className="w-4 h-4"
-            type="checkbox"
-            id="searchAuthor"
-            name="searchAuthor"
-            value="Author"
-            defaultChecked={true}
-          ></input>
-        </div>
-      </div>
+      
     </div>
   );
 }
