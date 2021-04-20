@@ -2,7 +2,7 @@ import React from "react";
 import { Cookies } from "./Cookies";
 import { ListingData } from "./App";
 import { LoadingButton } from "./LoadingButton";
-import { ListingType } from "./Listings";
+import { ListingType } from "./ListingsContainer";
 import { BrowserView, isBrowser } from "react-device-detect";
 import close from "./images/close-outline.svg";
 
@@ -14,9 +14,11 @@ type BodyProps = {
   removeSelf: (id: string, listingType: ListingType) => void;
   data: ListingData;
   authorizeCallback: () => void;
+  isLoading: boolean;
+  setBusy: (value:boolean) => void;
 };
 
-export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
+export function Listing({ removeSelf, data, authorizeCallback, isLoading, setBusy }: BodyProps) {
   type ResponseData = {
     success: boolean;
     sessionId: string;
@@ -31,10 +33,11 @@ export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
       // For browser
       <LoadingButton
         callback={() => { }}
-        text="Unsave"
+        text={isLoading ? "Wait" : "Unsave"}
         loading={false}
-        className="h-full w-full block rounded"
+        className={`h-full w-full block rounded ${isLoading ? "disabled: opacity-50" : ""}`}
         iconPath=""
+        disabled={isLoading}
       />
       :
       // For mobile
@@ -44,6 +47,7 @@ export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
         loading={false}
         className="h-full w-full block rounded"
         iconPath={close}
+        disabled={isLoading}
       />
   ) : (
     isBrowser ?
@@ -54,6 +58,7 @@ export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
         loading={true}
         className="h-full w-full block rounded"
         iconPath=""
+        disabled={isLoading}
       />
         :
       // For unsaving mobile
@@ -63,6 +68,7 @@ export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
         loading={true}
         className="h-full w-full block rounded"
         iconPath=""
+        disabled={isLoading}
       />
         
   );
@@ -70,38 +76,40 @@ export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
   // Function for unsaving a post
   const unsavePost = () => {
     setUnsaving(true);
-    const fullname = "t3_" + data.id; // The fullname of our saved link. t1_ is a comment, t3_ is a link
+    setBusy(true);
+    // const fullname = "t3_" + data.id; // The fullname of our saved link. t1_ is a comment, t3_ is a link
 
-    // Make a post to the unsave api
-    fetch("http://127.0.0.1:7070/unsave", {
-      method: "POST",
-      headers: new Headers({
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify({
-        fullname: fullname,
-        sessionId: Cookies.getCookie("sessionId"),
-      }),
-    })
-      // Get the response back to make sure we didn't have an error
-      .then((response) => response.text())
-      .then((responseData) => {
-        var obj: ResponseData = JSON.parse(responseData); // Parse the json
-        if (obj.success)
-          // If success, remove our listing by calling the passed in callback
-          removeSelf(
-            data.id,
-            data.body === "" ? ListingType.Link : ListingType.Comment
-          );
+    // // Make a post to the unsave api
+    // fetch("http://127.0.0.1:7070/unsave", {
+    //   method: "POST",
+    //   headers: new Headers({
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Content-Type": "application/json",
+    //   }),
+    //   body: JSON.stringify({
+    //     fullname: fullname,
+    //     sessionId: Cookies.getCookie("sessionId"),
+    //   }),
+    // })
+    //   // Get the response back to make sure we didn't have an error
+    //   .then((response) => response.text())
+    //   .then((responseData) => {
+    //     var obj: ResponseData = JSON.parse(responseData); // Parse the json
+    //     if (obj.success)
+    //       // If success, remove our listing by calling the passed in callback
+    //       removeSelf(
+    //         data.id,
+    //         data.body === "" || data.body === undefined ? ListingType.Link : ListingType.Comment
+    //       );
 
-        setUnsaving(false);
+    //     setUnsaving(false);
+    //     setBusy(false);
 
-        // Add our cookie. If the sessionId is empty, we need to reauthenticate
-        Cookies.addCookie("sessionId", obj.sessionId);
-        if (obj.sessionId === "") authorizeCallback();
-        console.log(obj.sessionId);
-      });
+    //     // Add our cookie. If the sessionId is empty, we need to reauthenticate
+    //     Cookies.addCookie("sessionId", obj.sessionId);
+    //     if (obj.sessionId === "") authorizeCallback();
+    //     console.log(obj.sessionId);
+    //   });
   };
 
   const openInNewTab = (url:string) => {
@@ -111,7 +119,7 @@ export function Listing({ removeSelf, data, authorizeCallback }: BodyProps) {
 
   // Formats the title for our listing
   const title = (listing: ListingData): string => {
-    var length = 800;
+    var length = 200;
     var text = listing.title ?? listing.body ?? "";
     return text.length > length ? text.substr(0, length - 3) + "..." : text;
   };

@@ -1,12 +1,8 @@
 import React, { SyntheticEvent } from "react";
 import { ListingData } from "./App";
+import { dataState } from "./Stores";
 
-export type SearchProps = {
-  originalData: Array<ListingData>;
-  setFilteredDataCallback: (data: Array<ListingData>) => void;
-};
-
-export function Search(props: SearchProps) {
+export function Search() {
   var delayedFilter: NodeJS.Timeout;
 
   const filter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +11,8 @@ export function Search(props: SearchProps) {
     const text = e.currentTarget.value;
 
     if (text === "") {
-      props.setFilteredDataCallback(props.originalData);
+      dataState.filteredData = dataState.originalData.links;
+      // props.setFilteredDataCallback(contextData.originalData);
       return;
     }
 
@@ -23,14 +20,12 @@ export function Search(props: SearchProps) {
     delayedFilter = setTimeout(() => {
       // Then search on a delay
       var regex = new RegExp(text, "gmi");
-      props.setFilteredDataCallback(
-        props.originalData.filter(
-          (item) =>
-            item.title.match(regex) ||
-            item.author.match(regex) ||
-            item.subreddit.match(regex)
-        )
-      );
+      dataState.filteredData = dataState.originalData.links.filter(
+            (item) =>
+              item.title.match(regex) ||
+              item.author.match(regex) ||
+              item.subreddit.match(regex)
+        );
       console.log("filtered");
     }, 1000);
   };
