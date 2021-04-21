@@ -36,20 +36,15 @@ export function CategorizedListing({ data }: BodyProps) {
 
   return (
     <div className="w-full mb-2 h-14 flex text-color listing-background rounded text-xs lg:text-lg">
-      <a className="listing-title pl-4 pr-4 font-medium cursor-pointer listing"  onClick={(()=>filterBySubreddit(data.subredditName))}>
-        {title(data)}
+      <a className="flex w-full pl-4 pr-4 font-medium cursor-pointer listing place-items-center"  onClick={(()=>filterBySubreddit(data.subredditName))}>
+        /r/{title(data)}
       </a>
 
       {/* The amount of listings under the subreddit */}
-      <div className="listing-info lg:w-1/6 flex justify-center place-items-center flex-col border-l-2 border-r-2 listing">
+      <div className="listing-info lg:w-1/12 flex justify-center place-items-center flex-col border-l-2 border-r-2 listing">
         {data.amount}
       </div>
 
-      {/* The unsave post button */}
-
-      <div className="w-3">
-
-      </div>
     </div>
   );
 }

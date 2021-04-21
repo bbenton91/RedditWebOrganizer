@@ -161,12 +161,12 @@ function ListingsContainer(props: ListProps) {
       loading = false;
       disabled = false;
     } else if (!hasData && !loadingState.isLoading) {
-      text = "Fetch Data";
+      text = "Get Saved";
       loading = false;
       disabled = false;
     }
     else if (!hasData && loadingState.isLoading) {
-      text = "Fetching Data";
+      text = "Fetching Saved";
       loading = true;
       disabled = true;
       // status = "Please be patient. This could take up to a minute to retrieve all saved posts."
@@ -192,8 +192,8 @@ function ListingsContainer(props: ListProps) {
     return "";
   };
 
-  const regularListing = (value: ListingData) => {
-    return <li key={value.id} data-id={value.id}>
+  const regularListing = (value: ListingData, index:number) => {
+    return <li key={value.id} data-id={value.id} data-num={index}>
           <Listing
             removeSelf={removeListing}
             data={value}
@@ -217,9 +217,9 @@ function ListingsContainer(props: ListProps) {
     if (dataState.filteredData.length > 0) {
       return (
         <ul className="m-2 w-full">
-          {dataState.filteredData.map((value) => (
+          {dataState.filteredData.map((value, index) => (
             contentType.listingType === ContentType.ListingData?
-              regularListing(value as ListingData)
+              regularListing(value as ListingData, index)
               :
               categorizedListing(value as CategorizedListings)
           ))}

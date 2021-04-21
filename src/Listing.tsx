@@ -128,14 +128,14 @@ export function Listing({ removeSelf, data, authorizeCallback, isLoading, setBus
 
   return (
     <div className="w-full mb-2 h-14 flex text-color listing-background rounded text-xs lg:text-lg">
-      <a className="listing-title pl-4 pr-4 font-medium cursor-pointer listing"  onClick={(()=>openInNewTab(redditBaseUrl + data.permalink))}>
+      <a className="flex listing-title pl-4 pr-4 font-medium cursor-pointer listing place-items-center"  onClick={(()=>openInNewTab(redditBaseUrl + data.permalink))}>
         {title(data)}
       </a>
 
       {/* The title/content */}
       <div className="listing-info lg:w-1/6 flex justify-center place-items-center flex-col border-l-2 border-r-2 listing">
-        <span>{"r/" + data.subreddit}</span>
-        <span>{"u/" + data.author}</span>
+        <span>{"/r/" + data.subreddit}</span>
+        <span>{"/u/" + data.author}</span>
       </div>
 
       {/* The unsave post button */}
