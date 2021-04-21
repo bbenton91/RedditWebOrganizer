@@ -1,6 +1,6 @@
 import React, { SyntheticEvent } from "react";
 import { ListingData } from "./App";
-import { dataState } from "./Stores";
+import { ContentType, contentType, dataState } from "./Stores";
 
 export function Search() {
   var delayedFilter: NodeJS.Timeout;
@@ -20,13 +20,15 @@ export function Search() {
     delayedFilter = setTimeout(() => {
       // Then search on a delay
       var regex = new RegExp(text, "gmi");
+      contentType.listingType = ContentType.ListingData;
       dataState.filteredData = dataState.originalData.links.filter(
             (item) =>
-              item.title.match(regex) ||
-              item.author.match(regex) ||
-              item.subreddit.match(regex)
-        );
-      console.log("filtered");
+            item.title?.match(regex) ||
+            item.body?.match(regex) ||
+            item.author.match(regex) ||
+            item.subreddit.match(regex)
+      );
+      
     }, 1000);
   };
 
