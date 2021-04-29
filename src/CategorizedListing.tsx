@@ -41,7 +41,7 @@ export function CategorizedListing({ data }: BodyProps) {
       </a>
 
       {/* The amount of listings under the subreddit */}
-      <div className="listing-info lg:w-1/12 flex justify-center place-items-center flex-col border-l-2 border-r-2 listing">
+      <div className="lg:w-24 flex justify-center place-items-center flex-col border-l-2 border-r-2 listing">
         {data.amount}
       </div>
 
