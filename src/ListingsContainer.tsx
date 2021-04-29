@@ -4,6 +4,7 @@ import { Listing } from "./Listing";
 import { SavedData, ListingData } from "./App";
 import { LoadingButton } from "./LoadingButton";
 import "./styles/Listings.css";
+import "./styles/ListingContainer.css";
 import { ContentType, contentType, dataState, loadingState } from "./Stores";
 import {view} from '@risingstack/react-easy-state';
 import { CategorizedListing, CategorizedListings } from "./CategorizedListing";
@@ -235,7 +236,7 @@ function ListingsContainer(props: ListProps) {
   // The final render
   return <div
         id="innerListings"
-        className="w-full lg:w-4/6 h-5/6 bg-white overflow-y-auto"
+        className="w-full lg:w-4/6 h-5/6 bg-white overflow-y-auto container"
       >
         {button()}
         {listings()}
