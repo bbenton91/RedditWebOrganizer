@@ -29,8 +29,7 @@ export function CategorizedListing({ data }: BodyProps) {
   const filterBySubreddit = (subredditName: string) => {
     contentType.listingType = ContentType.ListingData;
     let data = dataState.originalData.links;
-    const regex = new RegExp(`${subredditName}`, 'i')
-    let filtered = data.filter(d => d.subreddit.match(regex) != null)
+    let filtered = data.filter(d => d.subreddit === subredditName)
     dataState.filteredData = filtered;
   }
 
