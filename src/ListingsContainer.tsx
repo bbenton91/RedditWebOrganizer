@@ -100,9 +100,6 @@ function ListingsContainer(props: ListProps) {
         if (obj.sessionId === "")
           props.authorizeCallback();
         // Otherwise, if we're finished but still on "link" type content, start a new fetch for the comments
-        else if (obj.finished && contentType === ListingType.Link)
-          fetchData(true, ListingType.Comment);
-        // Finally, keep getting data if we're not done
         else if (!obj.finished)
           fetchData(false, contentType);
         else {
