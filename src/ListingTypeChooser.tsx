@@ -33,6 +33,6 @@ export function ListingTypeChooser({ setListingType }: ListingTypeChooserProps) 
 
   return <div className="mb-5 text-black ">
     <button onClick={() => { contentType.listingType = ContentType.ListingData; dataState.filteredData = dataState.originalData.links;} } className="w-40 h-8 bg-white rounded font-medium">Recent</button>
-    <button onClick={loadCategorizedListings}className="w-40 h-8 bg-white rounded ml-4 font-medium">Subreddits</button>
+    <button onClick={loadCategorizedListings}className="w-40 h-8 bg-white rounded ml-4 font-medium">By Subreddit</button>
   </div>
 }
