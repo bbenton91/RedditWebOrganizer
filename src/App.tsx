@@ -7,6 +7,8 @@ import { LoadingStatus } from "./LoadingStatus";
 import { LogoutButton } from "./LogoutButton";
 import { Search } from "./Search";
 import { dataState, loadingState } from "./Stores";
+import { isBrowser } from "react-device-detect";
+
 
 
 import "./styles/App.css";
@@ -38,7 +40,7 @@ export function App() {
   const redirect = "http://localhost:3000";
   const scope = "identity,save,history";
 
-  const RedditAuthUrl = `https://www.reddit.com/api/v1/authorize?client_id=${appId}&response_type=code&
+  const RedditAuthUrl = `https://www.reddit.com${isBrowser? "/api/v1/authorize?" : "/api/v1/authorize.compact?"}client_id=${appId}&response_type=code&
 state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
 
   type ResponseData = {
@@ -110,10 +112,14 @@ state=#rs&redirect_uri=${redirect}&duration=permanent&scope=${scope}`;
       id="main"
       className="flex flex-col h-full items-center justify-center text-white"
     >
-      <h1 className="text-5xl mb-5 mt-2 title">Reddit Organizer</h1>
-      <LogoutButton logoutCallback={clearAuthorize} />
+      <div className="flex flex-col w-full justify-end text-sm lg:text-lg">
+        <h1 className="text-4xl lg:text-5xl mb-2 lg:mb-5 mt-2 title text-center">Reddit Organizer</h1>
+        <div className="flex justify-end lg:w-1/5 lg:m-auto">
+          <LogoutButton logoutCallback={clearAuthorize} className="mr-2 w-14"  />
+        </div>
+      </div>
       <LoadingStatus amount={dataState.originalData.comments.length + dataState.originalData.links.length} className={ loadingState.isLoading ? "text-yellow-700" : "opacity-0" } />
-      <ListingTypeChooser setListingType={setNewCurrListingType} />
+      <ListingTypeChooser setListingType={setNewCurrListingType}/>
       <Search />
       <ListingsContainer {...listingProps} />
     </div>
