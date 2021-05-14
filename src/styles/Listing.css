@@ -28,10 +28,15 @@
     width:10%;
 }
 
+.unsave-icon{
+    max-width: 1rem;
+    max-height: 1rem;
+}
+
 
 @media only screen and (max-width: 768px) {
     .listing-title{
-        width:50%;
+        width:55%;
     }
     
     .listing-info{
@@ -39,6 +44,6 @@
     }
     
     .listing-unsave{
-        width:15%;
+        width:10%;
     }
 }

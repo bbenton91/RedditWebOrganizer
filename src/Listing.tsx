@@ -3,8 +3,8 @@ import { Cookies } from "./Cookies";
 import { ListingData } from "./App";
 import { LoadingButton } from "./LoadingButton";
 import { ListingType } from "./ListingsContainer";
-import { BrowserView, isBrowser } from "react-device-detect";
-import close from "./images/close-outline.svg";
+import { isBrowser } from "react-device-detect";
+import close from "./images/close.png";
 
 
 import "./styles/Listing.css";
@@ -45,7 +45,7 @@ export function Listing({ removeSelf, data, authorizeCallback, isLoading, setBus
         callback={() => { }}
         text = ""
         loading={false}
-        className="h-full w-full block rounded"
+        className="rounded unsave-icon"
         iconPath={close}
         disabled={false}
       />
@@ -66,7 +66,7 @@ export function Listing({ removeSelf, data, authorizeCallback, isLoading, setBus
         callback={() => {}}
         text=""
         loading={true}
-        className="h-full w-full block rounded"
+        className="h-full w-full rounded unsave-icon"
         iconPath=""
         disabled={false}
       />
@@ -139,7 +139,7 @@ export function Listing({ removeSelf, data, authorizeCallback, isLoading, setBus
       </div>
 
       {/* The unsave post button */}
-      <div className="listing-unsave lg:w-20 rounded border-r-2">
+      <div className="listing-unsave lg:w-20 border-r-2">
         <button className="w-full h-full" onClick={unsavePost}>{unsaveButton}</button>
       </div>
 
