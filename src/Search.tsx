@@ -27,19 +27,15 @@ export function Search() {
       const searchUser = document.querySelector("#searchUser") as HTMLInputElement;
       const searchSubreddit = document.querySelector("#searchSubreddit") as HTMLInputElement;
 
-      console.log(searchComment);
-      console.log(searchUser);
-      console.log(searchSubreddit);
-
       // Then search on a delay
       var regex = new RegExp(text, "gmi");
       contentType.listingType = ContentType.ListingData;
       dataState.filteredData = dataState.originalData.links.filter(
             (item) =>
-            searchComment?.checked ? item.title?.match(regex) : false ||
-            searchComment?.checked ? item.body?.match(regex) : false ||
-            searchUser?.checked ? item.author.match(regex) : false ||
-            searchSubreddit?.checked ? item.subreddit.match(regex) : false
+            (searchComment?.checked ? item.title?.match(regex) : false) ||
+            (searchComment?.checked ? item.body?.match(regex) : false) ||
+            (searchUser?.checked ? item.author.match(regex) : false) ||
+            (searchSubreddit?.checked ? item.subreddit.match(regex) : false)
       );
       
     }, 1000);
